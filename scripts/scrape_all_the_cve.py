@@ -9,9 +9,9 @@ ssl._create_default_https_context = ssl._create_unverified_context
 
 # Global Variables
 
-vulnCount = 0;
+vulnCount = 0
 
-codeLinkCount = 0;
+codeLinkCount = 0
 data_log = open("CVE-Scraper_all.dat", "w+") # volatile extra data storage [JSON]
 
 # Error log writer
