@@ -32,19 +32,14 @@ csv.field_size_limit(100000000)
 #https://docs.python.org/3/library/csv.html
 with open("./MSR_data_cleaned./MSR_data_cleaned.csv", newline="", encoding="utf-8") as csvfile:
     codeSnippets = csv.DictReader(csvfile, delimiter=",")
-
     for row in codeSnippets:
-        if row["vul"] == "1":
-            buggyCode = row["func_before"]
-            fixedCode = row["func_after"]
-            print("Initial prompt")
-            print(llmPhrase)
-            print("Bug Code snippet")
-            print(buggyCode)
-            print("LLM Response")
-            print(runGemma(buggyCode, fixedCode, llmPhrase))
-            break
-        else:
-            continue
+        buggyCode = row["func_before"]
+        fixedCode = row["func_after"]
+        print("Initial prompt")
+        print(llmPhrase)
+        print("Bug Code snippet")
+        print(buggyCode)
+        print("LLM Response")
+        print(runGemma(buggyCode, fixedCode, llmPhrase))
 
     #print(response.message.content)
