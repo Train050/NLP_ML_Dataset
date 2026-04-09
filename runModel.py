@@ -1,3 +1,4 @@
+from httpx import codes
 from ollama import generate
 from ollama import chat
 import time
@@ -30,7 +31,7 @@ def runLlama(bugCode, fixedCode, prompt):
 csv.field_size_limit(100000000)
 
 #https://docs.python.org/3/library/csv.html
-with open("./MSR_data_cleaned./MSR_data_cleaned.csv", newline="", encoding="utf-8") as csvfile:
+with open("only_vulnerability.csv", newline="", encoding="utf-8") as csvfile:
     codeSnippets = csv.DictReader(csvfile, delimiter=",")
     for row in codeSnippets:
         buggyCode = row["func_before"]
@@ -41,5 +42,4 @@ with open("./MSR_data_cleaned./MSR_data_cleaned.csv", newline="", encoding="utf-
         print(buggyCode)
         print("LLM Response")
         print(runGemma(buggyCode, fixedCode, llmPhrase))
-
     #print(response.message.content)

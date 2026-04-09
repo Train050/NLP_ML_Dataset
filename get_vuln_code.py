@@ -11,27 +11,17 @@ vulnerableSegments = []
 #https://docs.python.org/3/library/csv.html
 with open("./MSR_data_cleaned./MSR_data_cleaned.csv", newline="", encoding="utf-8") as csvfile:
     codeSnippets = csv.DictReader(csvfile, delimiter=",")
-    count = 0
     for row in codeSnippets:
         if row["vul"] == "1":
             vulnerableSegments.append(row)
-            #print(row)
-            count += 1
-            if count == 2:
-                break
 
 #Writing to file that's cleared each time: https://docs.python.org/3/library/functions.html#open
 with open("only_vulnerability.csv", "w", newline="", encoding="utf-8") as outFile:
-    writer = csv.DictWriter(outFile, delimiter=",")
-    
     #Getting the key/value so I can actually store the info I need: https://www.w3schools.com/python/python_dictionaries_loop.asp
     #Also this to keep the label before each data point in the csv: https://stackoverflow.com/questions/75854002/writing-a-dictionary-to-a-csv-file-one-line-for-each-key-value-pair-one-cell
+    #Another useful source for getting writing to work and add headers to the csv: https://dev.to/thumbone/dumping-data-with-pythons-csv-dictwriter-1g0
+    labels = vulnerableSegments[0].keys()
+    writer = csv.DictWriter(outFile, delimiter=",", fieldnames=labels)
+    writer.writeheader()
     for rows in vulnerableSegments:
-        for key, value in rows.items():
-            writer.write([key, value])
-
-
-""" with open("only_vulnerability.csv", newline="", encoding="utf-8") as test:
-    codeSnippets = csv.DictReader(test, delimiter=",")
-    for row in codeSnippets:
-        print(row) """
+        writer.writerow(rows)
