@@ -1,6 +1,4 @@
-from httpx import codes
 from ollama import generate
-from ollama import chat
 import time
 import pandas as pd
 import csv
@@ -11,21 +9,12 @@ llmPhrase = "You are an senior level programmer. You will be provided a segment 
 #Helpful resource I followed for my approach: https://medium.com/@jonigl/using-ollama-with-python-a-simple-guide-0752369e1e55
 #Time resource used: https://docs.python.org/3/library/time.html
 
-def runGemma(bugCode, fixedCode, prompt):
+#https://www.cohorte.co/blog/using-ollama-with-python-step-by-step-guide
+def runModel(lllModel, bugCode, fixedCode, prompt):
     startTime = time.time()
-    response = chat(model="gemma4:e2b", messages=[{"role": "user", "content": prompt + "\n" + bugCode}],)
+    response = generate(model=lllModel, prompt=(prompt + "\n" + bugCode),)
     stopTime = time.time()
-    return response
-
-def runDeepseek(bugCode, fixedCode, prompt):
-    startTime = time.time()
-    response = chat(model="deepseek-r1:1.5b", messages=[{"role": "user", "content": prompt + bugCode}],)
-    stopTime = time.time()
-
-def runLlama(bugCode, fixedCode, prompt):
-    startTime = time.time()
-    response = chat(model="llama3.2:3b", messages=[{"role": "user", "content": prompt + bugCode}],)
-    stopTime = time.time()
+    return lllModel + "\n" + response["response"]
 
 #https://mimonirbd.medium.com/how-to-solve-python-csv-error-field-larger-than-field-limit-131072-error-320fa3c44a20
 csv.field_size_limit(100000000)
@@ -36,10 +25,9 @@ with open("only_vulnerability.csv", newline="", encoding="utf-8") as csvfile:
     for row in codeSnippets:
         buggyCode = row["func_before"]
         fixedCode = row["func_after"]
-        print("Initial prompt")
-        print(llmPhrase)
-        print("Bug Code snippet")
-        print(buggyCode)
-        print("LLM Response")
-        print(runGemma(buggyCode, fixedCode, llmPhrase))
+
+        print(runModel(llmModels[0], buggyCode, fixedCode, llmPhrase))
+        print(runModel(llmModels[1], buggyCode, fixedCode, llmPhrase))
+        print(runModel(llmModels[2], buggyCode, fixedCode, llmPhrase))
+        break
     #print(response.message.content)
