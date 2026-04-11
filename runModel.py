@@ -15,18 +15,19 @@ Only respond with the entire corrected code segment that includes your code chan
 
 #https://www.cohorte.co/blog/using-ollama-with-python-step-by-step-guide
 #https://www.geeksforgeeks.org/python/g-fact-41-multiple-return-values-in-python/
-def runModel(llmNum, bugCode, fixedCode, prompt, trial, vulnSeverity, programLang, vulnType):
-    startTime = time.time()
-    response = generate(model=llmModels[llmNum], prompt=(prompt + "\n" + bugCode),)
-    stopTime = time.time()
-    output = {"llmModel" : llmModels[llmNum], "execTime": (stopTime - startTime), "programLang" : programLang, "vulnType" : vulnType, "vulnSeverity" : vulnSeverity, "iteration" : trial, "llmFixCode": response.response, "csvFixCode": fixedCode}
+def runModel(llmNum, bugCode, fixedCode, prompt, trial, vulnSeverity, programLang, vulnType, startFrom):
+    if startFrom <= trial:
+        startTime = time.time()
+        response = generate(model=llmModels[llmNum], prompt=(prompt + "\n" + bugCode),)
+        stopTime = time.time()
+        output = {"llmModel" : llmModels[llmNum], "execTime": (stopTime - startTime), "programLang" : programLang, "vulnType" : vulnType, "vulnSeverity" : vulnSeverity, "iteration" : trial, "llmFixCode": response.response, "csvFixCode": fixedCode}
 
-    #Writing to file that's cleared each time: https://docs.python.org/3/library/functions.html#open
-    with open(csvFileName[llmNum], "a+", newline="", encoding="utf-8") as outFile:
-        writer = csv.DictWriter(outFile, delimiter=",", fieldnames=output.keys())
-        if currentTrial == 0:
-            writer.writeheader()
-        writer.writerow(output)
+        #Writing to file that's cleared each time: https://docs.python.org/3/library/functions.html#open
+        with open(csvFileName[llmNum], "a+", newline="", encoding="utf-8") as outFile:
+            writer = csv.DictWriter(outFile, delimiter=",", fieldnames=output.keys())
+            if currentTrial == 0:
+                writer.writeheader()
+            writer.writerow(output)
 
 #https://mimonirbd.medium.com/how-to-solve-python-csv-error-field-larger-than-field-limit-131072-error-320fa3c44a20
 csv.field_size_limit(100000000)
@@ -35,6 +36,7 @@ csv.field_size_limit(100000000)
 with open("only_vulnerability.csv", newline="", encoding="utf-8") as csvfile:
     codeSnippets = csv.DictReader(csvfile, delimiter=",")
     currentTrial = 0
+    startFrom = 1525
     for row in codeSnippets:
         buggyCode = row["func_before"]
         fixedCode = row["func_after"]
@@ -43,10 +45,10 @@ with open("only_vulnerability.csv", newline="", encoding="utf-8") as csvfile:
         vulnType = row["Vulnerability Classification"]
 
         #Gemma
-        runModel(0, buggyCode, fixedCode, llmPhrase, currentTrial, vulnSeverity, programLang, vulnType)
+        runModel(0, buggyCode, fixedCode, llmPhrase, currentTrial, vulnSeverity, programLang, vulnType, startFrom)
         #Qwen2
-        runModel(1, buggyCode, fixedCode, llmPhrase, currentTrial, vulnSeverity, programLang, vulnType)
+        runModel(1, buggyCode, fixedCode, llmPhrase, currentTrial, vulnSeverity, programLang, vulnType, startFrom)
         #Llama3.2
-        runModel(2, buggyCode, fixedCode, llmPhrase, currentTrial, vulnSeverity, programLang, vulnType)
+        runModel(2, buggyCode, fixedCode, llmPhrase, currentTrial, vulnSeverity, programLang, vulnType, startFrom)
         currentTrial += 1
         print(currentTrial)
