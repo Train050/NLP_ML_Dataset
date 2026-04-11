@@ -6,9 +6,9 @@ import csv
 #Getting rid of deepseek-r1:1.5b since it has too few parameters, and replacing it with qwen3.5:2b
 llmModels = ["gemma4:e2b", "qwen2.5:3b", "llama3.2:3b"]
 csvFileName = ["./llmResponses/gemma4.csv", "./llmResponses/qwen2.csv", "./llmResponses/llama3.csv"]
-llmPhrase = """You are an senior level programmer. You will be provided a segment of code that has bugs within them. 
-Do not provide context for your fix or any dialogue. Only fix the code segment and respond with the fixed version of the code.
-Only respond with the corrected code segment that includes your code changes and the remaining, unaltered code."""
+llmPhrase = """You are an senior level programmer. You will be provided a segment of code that has bugs in them. 
+Do not provide context for your fix or any dialogue describing how you fixed the program. Only fix the code segment and respond with the fixed version of the code.
+Only respond with the entire corrected code segment that includes your code changes and any unaltered code."""
 
 #Helpful resource I followed for my approach: https://medium.com/@jonigl/using-ollama-with-python-a-simple-guide-0752369e1e55
 #Time resource used: https://docs.python.org/3/library/time.html
@@ -49,6 +49,4 @@ with open("only_vulnerability.csv", newline="", encoding="utf-8") as csvfile:
         #Llama3.2
         runModel(2, buggyCode, fixedCode, llmPhrase, currentTrial, vulnSeverity, programLang, vulnType)
         currentTrial += 1
-        
-        if currentTrial >= 2:
-             break
+        print(currentTrial)
