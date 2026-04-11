@@ -25,7 +25,7 @@ def runModel(llmNum, bugCode, fixedCode, prompt, trial, vulnSeverity, programLan
     with open(csvFileName[llmNum], "a+", newline="", encoding="utf-8") as outFile:
         writer = csv.DictWriter(outFile, delimiter=",", fieldnames=output.keys())
         if currentTrial == 0:
-                writer.writeheader()
+            writer.writeheader()
         writer.writerow(output)
 
 #https://mimonirbd.medium.com/how-to-solve-python-csv-error-field-larger-than-field-limit-131072-error-320fa3c44a20
