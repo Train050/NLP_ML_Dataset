@@ -42,6 +42,8 @@ with open(csvFileName[0], newline="", encoding="utf-8") as gemmaFile:
     llmCode = csv.DictReader(gemmaFile, delimiter=",")
     timesCalled = 0
     for row in llmCode:
+        print(row)
+        break
         llmModel = row["llmModel"]
         execTime = row["execTime"]
         programLang = row["programLang"]
@@ -57,6 +59,7 @@ with open(csvFileName[1], newline="", encoding="utf-8") as qwenFile:
     llmCode = csv.DictReader(qwenFile, delimiter=",")
     timesCalled = 0
     for row in llmCode:
+        break
         llmModel = row["llmModel"]
         execTime = row["execTime"]
         programLang = row["programLang"]
@@ -72,6 +75,7 @@ with open(csvFileName[2], newline="", encoding="utf-8") as llamaFile:
     llmCode = csv.DictReader(llamaFile, delimiter=",")
     timesCalled = 0
     for row in llmCode:
+        break
         llmModel = row["llmModel"]
         execTime = row["execTime"]
         programLang = row["programLang"]
