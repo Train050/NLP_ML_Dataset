@@ -25,7 +25,7 @@ def runModel(llmNum, bugCode, fixedCode, prompt, trial, vulnSeverity, programLan
         #Writing to file that's cleared each time: https://docs.python.org/3/library/functions.html#open
         with open(csvFileName[llmNum], "a+", newline="", encoding="utf-8") as outFile:
             writer = csv.DictWriter(outFile, delimiter=",", fieldnames=output.keys())
-            if currentTrial == 0:
+            if trial == 0:
                 writer.writeheader()
             writer.writerow(output)
 

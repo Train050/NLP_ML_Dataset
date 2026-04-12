@@ -1,6 +1,8 @@
 Ollama, which was used to run the LLMs locally: https://ollama.com/download
-LLM Models:
+LLMs for Code Repair:
     https://ollama.com/library/gemma4:e2b
     https://ollama.com/library/qwen2.5:3b
     https://ollama.com/library/llama3.2:3b
+
+LLM for grading other LLM output:
     https://ollama.com/library/deepseek-r1:8b

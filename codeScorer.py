@@ -7,8 +7,8 @@ csv.field_size_limit(100000000)
 llmModel = "deepseek-r1:8b"
 csvFileName = ["./llmResponses/gemma4.csv", "./llmResponses/qwen2.csv", "./llmResponses/llama3.csv"]
 scoreFileName = ["./llmScores/gemma4Scores.csv", "./llmScores/qwen2Scores.csv", "./llmScores/llama3Scores.csv", "./llmScores/allScores.csv"]
-llmPrompt = """You are an senior level programmer. You will be provided two segments of code. The first code input is an attempt to fix bugs within a code snippet.
- The second code input is the actual fix for the code snippet. 
+llmPrompt = """You are an senior level programmer. You will be provided two segments of code. The first code input is an attempt to fix the bugs within a code snippet.
+ The second code input is the actual fix for the code snippet that was put into production. You are tasked with grading the first code input.
  Only return a score out of 100, where 70 potential points are for if the first code is functional and 30 potential points are for how identical the code snippets are.
   The format for your output should be EARNED POINTS / 100"""
 
