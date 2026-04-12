@@ -1,3 +1,5 @@
+from xml.etree.ElementTree import tostring
+
 from ollama import generate
 import csv
 
@@ -7,10 +9,17 @@ csv.field_size_limit(100000000)
 llmModel = "deepseek-r1:8b"
 csvFileName = ["./llmResponses/gemma4.csv", "./llmResponses/qwen2.csv", "./llmResponses/llama3.csv"]
 scoreFileName = ["./llmScores/gemma4Scores.csv", "./llmScores/qwen2Scores.csv", "./llmScores/llama3Scores.csv", "./llmScores/allScores.csv"]
-llmPrompt = """You are an senior level programmer. You will be provided two segments of code. The first code input is an attempt to fix the bugs within a code snippet.
- The second code input is the actual fix for the code snippet that was put into production. You are tasked with grading the first code input.
- Only return a score out of 100, where 70 potential points are for if the first code is functional and 30 potential points are for how identical the code snippets are.
-  The format for your output should be EARNED POINTS / 100"""
+llmPrompt = """You are an expert programmer. Your goal is to perfectly score a code snippet that attempts to fix a bug, given the code snippet that was actually used, and return your calculated score. 
+
+Think through this step by step:
+1. First, recieve two code snippet inputs following this prompt.
+2. Then, grade the first code snippet out of 30 points  based on if it successfully changed only the bug-prone lines of code which is observed in the second code snippet.
+3. Next, grade the first code snippet out of 70 points, depending on how accurately the first code snippet functionally matches the second code snippet. Do not deduct points out of the 70 if the code snippets are functionally identical but programmed differently.
+4. After, add the scores for each section to get a final score, which is at most 100 points.
+5. Finally, output only the summed total score.
+Your output should only be your summed total score.
+
+Return only the scored output with no additional explanation."""
 
 def evaluateModel(llmModel, execTime, programLang, vulnType, vulnSeverity, iteration, llmFixCode, csvFixCode, timesCalled):
     response = generate(model=llmModel, prompt=(llmPrompt + "\n" + llmFixCode + "\n" + csvFixCode),)
@@ -42,8 +51,6 @@ with open(csvFileName[0], newline="", encoding="utf-8") as gemmaFile:
     llmCode = csv.DictReader(gemmaFile, delimiter=",")
     timesCalled = 0
     for row in llmCode:
-        print(row)
-        break
         llmModel = row["llmModel"]
         execTime = row["execTime"]
         programLang = row["programLang"]
@@ -54,12 +61,12 @@ with open(csvFileName[0], newline="", encoding="utf-8") as gemmaFile:
         csvFixCode = row["csvFixCode"]
         evaluateModel(llmModel, execTime, programLang, vulnType, vulnSeverity, iteration, llmFixCode, csvFixCode, timesCalled)
         timesCalled += 1
+        print(llmModel + " " + str(timesCalled))
 
 with open(csvFileName[1], newline="", encoding="utf-8") as qwenFile:
     llmCode = csv.DictReader(qwenFile, delimiter=",")
     timesCalled = 0
     for row in llmCode:
-        break
         llmModel = row["llmModel"]
         execTime = row["execTime"]
         programLang = row["programLang"]
@@ -70,12 +77,12 @@ with open(csvFileName[1], newline="", encoding="utf-8") as qwenFile:
         csvFixCode = row["csvFixCode"]
         evaluateModel(llmModel, execTime, programLang, vulnType, vulnSeverity, iteration, llmFixCode, csvFixCode, timesCalled)
         timesCalled += 1
+        print(llmModel + " " + str(timesCalled))
 
 with open(csvFileName[2], newline="", encoding="utf-8") as llamaFile:
     llmCode = csv.DictReader(llamaFile, delimiter=",")
     timesCalled = 0
     for row in llmCode:
-        break
         llmModel = row["llmModel"]
         execTime = row["execTime"]
         programLang = row["programLang"]
@@ -86,3 +93,4 @@ with open(csvFileName[2], newline="", encoding="utf-8") as llamaFile:
         csvFixCode = row["csvFixCode"]
         evaluateModel(llmModel, execTime, programLang, vulnType, vulnSeverity, iteration, llmFixCode, csvFixCode, timesCalled)
         timesCalled += 1
+        print(llmModel + " " + str(timesCalled))
