@@ -9,6 +9,7 @@ csv.field_size_limit(100000000)
 llmModel = "deepseek-r1:8b"
 csvFileName = ["./llmResponses/gemma4.csv", "./llmResponses/qwen2.csv", "./llmResponses/llama3.csv"]
 scoreFileName = ["./llmScores/gemma4Scores.csv", "./llmScores/qwen2Scores.csv", "./llmScores/llama3Scores.csv", "./llmScores/allScores.csv"]
+#Used this source to format my prompt: https://medium.com/@the_manoj_desai/output-formatting-strategies-getting-exactly-what-you-want-how-you-want-it-8cebb61bad2d
 llmPrompt = """You are an expert programmer. Your goal is to perfectly score a code snippet that attempts to fix a bug, given the code snippet that was actually used, and return your calculated score. 
 
 Think through this step by step:
