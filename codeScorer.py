@@ -1,5 +1,3 @@
-from xml.etree.ElementTree import tostring
-
 from ollama import generate
 import csv
 
