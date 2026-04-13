@@ -50,48 +50,51 @@ def evaluateModel(llmModel, execTime, programLang, vulnType, vulnSeverity, itera
 
 with open(csvFileName[0], newline="", encoding="utf-8") as gemmaFile:
     llmCode = csv.DictReader(gemmaFile, delimiter=",")
-    timesCalled = 0
+    timesCalled = 2000
     for row in llmCode:
-        llmModel = row["llmModel"]
-        execTime = row["execTime"]
-        programLang = row["programLang"]
-        vulnType = row["vulnType"]
-        vulnSeverity = row["vulnSeverity"]
-        iteration = row["iteration"]
-        llmFixCode = row["llmFixCode"]
-        csvFixCode = row["csvFixCode"]
-        evaluateModel(llmModel, execTime, programLang, vulnType, vulnSeverity, iteration, llmFixCode, csvFixCode, timesCalled)
-        timesCalled += 1
-        print(llmModel + " " + str(timesCalled))
+        if(int(row["iteration"]) >= timesCalled):
+            llmModel = row["llmModel"]
+            execTime = row["execTime"]
+            programLang = row["programLang"]
+            vulnType = row["vulnType"]
+            vulnSeverity = row["vulnSeverity"]
+            iteration = row["iteration"]
+            llmFixCode = row["llmFixCode"]
+            csvFixCode = row["csvFixCode"]
+            evaluateModel(llmModel, execTime, programLang, vulnType, vulnSeverity, iteration, llmFixCode, csvFixCode, timesCalled)
+            timesCalled += 1
+            print(llmModel + " " + str(timesCalled))
 
 with open(csvFileName[1], newline="", encoding="utf-8") as qwenFile:
     llmCode = csv.DictReader(qwenFile, delimiter=",")
     timesCalled = 0
     for row in llmCode:
-        llmModel = row["llmModel"]
-        execTime = row["execTime"]
-        programLang = row["programLang"]
-        vulnType = row["vulnType"]
-        vulnSeverity = row["vulnSeverity"]
-        iteration = row["iteration"]
-        llmFixCode = row["llmFixCode"]
-        csvFixCode = row["csvFixCode"]
-        evaluateModel(llmModel, execTime, programLang, vulnType, vulnSeverity, iteration, llmFixCode, csvFixCode, timesCalled)
-        timesCalled += 1
-        print(llmModel + " " + str(timesCalled))
+        if(int(row["iteration"]) >= timesCalled):
+            llmModel = row["llmModel"]
+            execTime = row["execTime"]
+            programLang = row["programLang"]
+            vulnType = row["vulnType"]
+            vulnSeverity = row["vulnSeverity"]
+            iteration = row["iteration"]
+            llmFixCode = row["llmFixCode"]
+            csvFixCode = row["csvFixCode"]
+            evaluateModel(llmModel, execTime, programLang, vulnType, vulnSeverity, iteration, llmFixCode, csvFixCode, timesCalled)
+            timesCalled += 1
+            print(llmModel + " " + str(timesCalled))
 
 with open(csvFileName[2], newline="", encoding="utf-8") as llamaFile:
     llmCode = csv.DictReader(llamaFile, delimiter=",")
     timesCalled = 0
     for row in llmCode:
-        llmModel = row["llmModel"]
-        execTime = row["execTime"]
-        programLang = row["programLang"]
-        vulnType = row["vulnType"]
-        vulnSeverity = row["vulnSeverity"]
-        iteration = row["iteration"]
-        llmFixCode = row["llmFixCode"]
-        csvFixCode = row["csvFixCode"]
-        evaluateModel(llmModel, execTime, programLang, vulnType, vulnSeverity, iteration, llmFixCode, csvFixCode, timesCalled)
-        timesCalled += 1
-        print(llmModel + " " + str(timesCalled))
+        if(int(row["iteration"]) >= timesCalled):
+            llmModel = row["llmModel"]
+            execTime = row["execTime"]
+            programLang = row["programLang"]
+            vulnType = row["vulnType"]
+            vulnSeverity = row["vulnSeverity"]
+            iteration = row["iteration"]
+            llmFixCode = row["llmFixCode"]
+            csvFixCode = row["csvFixCode"]
+            evaluateModel(llmModel, execTime, programLang, vulnType, vulnSeverity, iteration, llmFixCode, csvFixCode, timesCalled)
+            timesCalled += 1
+            print(llmModel + " " + str(timesCalled))
