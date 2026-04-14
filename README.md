@@ -90,7 +90,7 @@
   - [Python3](https://www.linuxbabe.com/ubuntu/install-python-3-6-ubuntu-16-04-16-10-17-04)
   
   - How to use
-    - First use [get_vuln_code.py] to extract the code snippets from the [MSR_data_cleaned.csv] file that contain bugs. The output file will be named [only-vulnerability.csv]
+    - First use [get_vuln_code.py] to extract the code snippets from the [MSR_data_cleaned.csv] file that contain bugs ([MSR_data_cleaned.csv] can be obtained from the google doc link above, and should be placed within the [MSR_data_cleaned] folder). The output file will be named [only-vulnerability.csv]
     - Then, run [runModel.py] to run each of the 3 LLMs, qwen 2.5, Llama 3.2, and Gemma 4, on the bug-filled code snippets. Their results will be saved under the [llmResponses] folder, with each LLM being saved to a seperate CSV corresponding to their name.
     - After that, you run [codeScorer.py], which will use deepseek-r1 to score each of the proposed code corrections with the code that was implemented in the real-world code input. The score produces is out of 100 points, with 30 points being added if the LLM found the bug correctly and 70 points for matching the functionality of the provided fix. The code will output corresponding named .csv files to the [llmScores] folder.
     - Lastly, you run [findScores.py] to extract only the score from each of the [llmScore] csv files for each of the LLMs. Despite a clear prompt being provided, deepseek did
