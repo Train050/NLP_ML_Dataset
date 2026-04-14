@@ -41,6 +41,9 @@ with open(scoreFileName[0], newline="", encoding="utf-8") as gemmaFile:
     llmCode = csv.DictReader(gemmaFile, delimiter=",")
     timesCalled = 0
     for row in llmCode:
+        if timesCalled == 74:
+            timesCalled += 1
+            continue
         if(int(row["iteration"]) >= timesCalled):
             llmModel = row["llmModel"]
             iteration = row["iteration"]
@@ -51,7 +54,7 @@ with open(scoreFileName[0], newline="", encoding="utf-8") as gemmaFile:
 
 with open(scoreFileName[1], newline="", encoding="utf-8") as qwenFile:
     llmCode = csv.DictReader(qwenFile, delimiter=",")
-    timesCalled = 0
+    timesCalled = 2000
     for row in llmCode:
         if(int(row["iteration"]) >= timesCalled):
             llmModel = row["llmModel"]
@@ -63,7 +66,7 @@ with open(scoreFileName[1], newline="", encoding="utf-8") as qwenFile:
 
 with open(scoreFileName[2], newline="", encoding="utf-8") as llamaFile:
     llmCode = csv.DictReader(llamaFile, delimiter=",")
-    timesCalled = 0
+    timesCalled = 2000
     for row in llmCode:
         if(int(row["iteration"]) >= timesCalled):
             llmModel = row["llmModel"]
