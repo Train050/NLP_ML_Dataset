@@ -1,4 +1,4 @@
-# A C/C++ Code Vulnerability Dataset with Code Changes and CVE Summaries
+# CAP6640 Final Project investigating LLM accuracy on fixing real-world bugs
 
 ## 1 . Data Description
 
@@ -28,21 +28,9 @@
 |         Update Date          |         update\_date          |                    Update date of the CVE                    |
 | Vulnerability Classification | vulnerability\_classification |                      Vulnerability type                      |
 
-- We used the code changes information(minned from commited version patches) to localize which lines of code in the files were modified. Taking modified lines between the two mini-versions as flaw lines, we split the functions in the modified files into vulnerable functions (if there were flaw lines modified in the function) and non-vulnerable functions.
-
-- ~~The cleaned version of split functions is coming soon.~~
-
 - The cleaned version of split functions(CSV format) can be found at: https://drive.google.com/file/d/1-0VhnHBp9IGh90s2wCNjeCMuy70HPl8X/view?usp=sharing  
 
-  
-
   Some of the intermediary files in the data collecting and cleaning process can be found at:https://drive.google.com/file/d/1E95oVDSO0CfAAs-Q0yav2HBGLZQce_v2/view?usp=sharing
-  
-  
-  
-  Pandas is recommended (Python Package, like `pandas.read_csv("filepath/file.csv")` ) to work on the dataset.
-  
-  
   
   Also JSON format dataset can be found at: https://drive.google.com/file/d/1deNsPfeh77h1SHjJURYOeyCR96JgxB_A/view?usp=sharing
   
@@ -56,17 +44,57 @@
   |      lines_after       | The modified lines in the founction after the vulnerability being fixed |
   |          vul           | "1" means vulnerable function and "0" means non-vulnerable function |
   |   vul_func_with_fix    |  The code comments showing how the vulnerability was fixed   |
+
+  - only_vulnerability.csv is the same as MSR_data_cleaned, being a comma-separated value(CSV) file, but only includes entries that have bugs.
+
+  - llmResponses is in comma-separated values(CSV) format:
+
+  | Column Name in the CSV |                         Description                          |
+  | :--------------------: | :----------------------------------------------------------: |
+  |      llmModel         | The LLM model that produced the bug-free version of code      |
+  |      execTime         | The time that the LLM took to output its bug-free solution    |
+  |      programLang      |                  Code programming language                    |
+  |      vulnType         |                      Vulnerability type                       |
+  |      vulnSeverity     | The relative severity of software flaw vulnerabilities        |
+  |      iteration        |       Which bug-filled code snippet was originally supplied to the model. |
+  |      llmFixCode       | The LLM output that intended to fix the buggy code            |
+  |      csvFixCode       | The function after the vulnerability being fixed              |
+
+  - llmScores is in comma-separated values(CSV) format:
+  
+  | Column Name in the CSV |                         Description                          |
+  | :--------------------: | :----------------------------------------------------------: |
+  |      llmModel         | The LLM model that produced the bug-free version of code      |
+  |      execTime         | The time that the LLM took to output its bug-free solution    |
+  |      programLang      |                  Code programming language                    |
+  |      vulnType         |                      Vulnerability type                       |
+  |      vulnSeverity     | The relative severity of software flaw vulnerabilities        |
+  |      iteration        |       Which bug-filled code snippet was originally supplied to the model. |
+  |      llmFixCode       | The LLM output that intended to fix the buggy code            |
+  |      csvFixCode       | The function after the vulnerability being fixed              |
+  |       score           |       The score that deepseek identified and extracted for the model,                |
+  |                       |       with 30 points from identifying the bug and 70 points from fixing it correctly.|
+
+  - Only Score Column is in comma-separated values(CSV) format:
+
+  | Column Name in the CSV |                         Description                          |
+  | :--------------------: | :----------------------------------------------------------: |
+  |      llmModel         | The LLM model that produced the bug-free version of code      |
+  |       iteration       |       Which bug-filled code snippet was originally supplied to the model.            |
+  |       score           |       The score that deepseek identified and extracted for the model,                |
+  |                       |       with 30 points from identifying the bug and 70 points from fixing it correctly.|
+
 ## 2. HOW To Use The Scripts
 
 - Pre-Requirements
-    - [Python3](https://www.linuxbabe.com/ubuntu/install-python-3-6-ubuntu-16-04-16-10-17-04)
-  - [Beautiful Soup](https://www.crummy.com/software/BeautifulSoup/bs4/doc/#installing-beautiful-soup)
-    - [Pandas](https://pandas.pydata.org/getting_started.html)
+  - [Python3](https://www.linuxbabe.com/ubuntu/install-python-3-6-ubuntu-16-04-16-10-17-04)
   
   - How to use
-    - First use [scrape_all_the_cve.py](https://github.com/ZeoVan/MSR_20_Code_Vulnerability_CSV_Dataset/blob/master/scripts/scrape_all_the_cve.py) to scrape all the CVE entries on CVE Details
-    - Then use [get_commit_info](https://github.com/ZeoVan/MSR_20_Code_Vulnerability_CSV_Dataset/blob/master/scripts/get_commit_info.py) to get commit messages
-    - Finally crawl down all the source files and patch files using commit messages above, and then split all the functions in the modified files, see [all_cpp_c_project_with_chrome_android.ipynb](https://github.com/ZeoVan/MSR_20_Code_Vulnerability_CSV_Dataset/blob/master/notebooks/all_cpp_c_project_with_chrome_android.ipynb) for details.
+    - First use [get_vuln_code.py] to extract the code snippets from the [MSR_data_cleaned.csv] file that contain bugs. The output file will be named [only-vulnerability.csv]
+    - Then, run [runModel.py] to run each of the 3 LLMs, qwen 2.5, Llama 3.2, and Gemma 4, on the bug-filled code snippets. Their results will be saved under the [llmResponses] folder, with each LLM being saved to a seperate CSV corresponding to their name.
+    - After that, you run [codeScorer.py], which will use deepseek-r1 to score each of the proposed code corrections with the code that was implemented in the real-world code input. The score produces is out of 100 points, with 30 points being added if the LLM found the bug correctly and 70 points for matching the functionality of the provided fix. The code will output corresponding named .csv files to the [llmScores] folder.
+    - Lastly, you run [findScores.py] to extract only the score from each of the [llmScore] csv files for each of the LLMs. Despite a clear prompt being provided, deepseek did
+    not always respond in the requested format, so it has to go back through the results and extract the correct score from the end of each line.
   
   ## Citation
   
